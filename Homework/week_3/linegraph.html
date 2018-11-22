@@ -29,7 +29,7 @@ this program will show the development of the lowest temperatures during winter
       ctx.lineTo(900, 515);
       ctx.stroke();
       ctx.font = "20px Arial"
-      ctx.fillText("Months of 2018", 450, 590);
+      ctx.fillText("Months", 450, 590);
       ctx.save();
       ctx.translate( 10, 400);
       ctx.rotate(-Math.PI / 2);
@@ -69,6 +69,7 @@ this program will show the development of the lowest temperatures during winter
         days.push(i);
       }
 
+      // loads data
       var fileName = "data.json";
       var temperatures = [];
       var txtFile = new XMLHttpRequest();
@@ -77,7 +78,7 @@ this program will show the development of the lowest temperatures during winter
               var data = JSON.parse(txtFile.responseText);
               var dates = Object.keys(data);
 
-              // gets temperature out of dicitonary
+              // gets temperatures out of dicitonary
               var counter = 1;
               for (const element in data){
                 temperature = data[element]["   TN"];
@@ -85,11 +86,11 @@ this program will show the development of the lowest temperatures during winter
                 counter++;
               }
 
-              // initialize cursour to begin drwaing graph
+              // initializes cursour to begin drwaing graph
               ctx.beginPath();
               ctx.moveTo(xtransform(days[0]), ytransform(100 - temperature[0]));
 
-              // draw graph
+              // draws graph
               for (var i = 1; i < 365; i++){
                 ctx.lineTo(xtransform(days[i]), ytransform(100 - temperatures[i]));
                 ctx.stroke();
