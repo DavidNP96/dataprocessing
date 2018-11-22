@@ -7,85 +7,121 @@ this program will show the development of the lowest temperatures during winter
 
 <!DOCTYPE html>
 <html>
-<head>
-<title>myPage</title>
-</head>
-<body>
-<h1 align="center"> daily minimum temperature in 2017</h1>
-<!-- <p>My first paragraph.</p> -->
-<canvas id="myChart" width="1500" height="1500"></canvas>
-<script>
-  var ctx = document.getElementById("myChart").getContext("2d");
-  ctx.beginPath();
-  ctx.moveTo(100,10);
-  ctx.lineTo(100,515);
-  ctx.lineTo(900,515);
-  ctx.stroke();
-  ctx.font = "20px Arial"
-  ctx.fillText("Days", 450, 590);
-  ctx.fillText("Temperature", 10, 20);
+  <head>
+    <title>myPage</title>
+  </head>
+  <body>
+    <h1 align="center"> daily minimum temperature in 2017 (schiphol)</h1>
+    <p> name: David Pantophlet</p>
+    <p> student number: 12466638</p>
+    <a href =http://projects.knmi.nl/klimatologie/daggegevens/selectie.cgi>
+      KNMI daggegevens
+    </a>
+  <!-- <p>My first paragraph.</p> -->
+    <canvas id="myChart" width="1500" height="1500"></canvas>
+    <script>
 
-  function createTransform(domain, range){
-	// domain is a two-element array of the data bounds [domain_min, domain_max]
-	// range is a two-element array of the screen bounds [range_min, range_max]
-	// this gives you two equations to solve:
-	// range_min = alpha * domain_min + beta
-	// range_max = alpha * domain_max + beta
- 		// a solution would be:
+      // draws grid with x and y axis labels
+      var ctx = document.getElementById("myChart").getContext("2d");
+      ctx.beginPath();
+      ctx.moveTo(100, 10);
+      ctx.lineTo(100, 515);
+      ctx.lineTo(900, 515);
+      ctx.stroke();
+      ctx.font = "20px Arial"
+      ctx.fillText("Months of 2018", 450, 590);
+      ctx.save();
+      ctx.translate( 10, 400);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("temperature in degrees celcius", 10, 20);
+      ctx.restore();
 
-    var domain_min = domain[0]
-    var domain_max = domain[1]
-    var range_min = range[0]
-    var range_max = range[1]
 
-    // formulas to calculate the alpha and the beta
-   	var alpha = (range_max - range_min) / (domain_max - domain_min)
-    var beta = range_max - alpha * domain_max
+      function createTransform(domain, range){
+    	// domain is a two-element array of the data bounds [domain_min, domain_max]
+    	// range is a two-element array of the screen bounds [range_min, range_max]
+    	// this gives you two equations to solve:
+    	// range_min = alpha * domain_min + beta
+    	// range_max = alpha * domain_max + beta
+     		// a solution would be:
 
-    // returns the function for the linear transformation (y= a * x + b)
-    return function(x){
-      return alpha * x + beta;
+        var domain_min = domain[0]
+        var domain_max = domain[1]
+        var range_min = range[0]
+        var range_max = range[1]
+
+        // formulas to calculate the alpha and the beta
+       	var alpha = (range_max - range_min) / (domain_max - domain_min)
+        var beta = range_max - alpha * domain_max
+
+        // returns the function for the linear transformation (y= a * x + b)
+        return function(x){
+          return alpha * x + beta;
+        }
     }
-}
-  xtransform = createTransform([0,364], [100,900])
-  ytransform = createTransform([-64,179], [50,450])
+      // create transform functions so that it suits with the data
+      xtransform = createTransform([0, 364], [100, 900])
+      ytransform = createTransform([-100, 200], [50, 500])
 
-  var days = [];
-  for (var i = 0; i < 365; i++){
-    days.push(i);
+      // creates array with days of the year
+      var days = [];
+      for (var i = 0; i < 365; i++){
+        days.push(i);
+      }
 
-  // var temp = [];
-  // for (var i = )
-  }
-  var fileName = "data.json";
-  var temperatures = [];
-  var txtFile = new XMLHttpRequest();
-  txtFile.onreadystatechange = function() {
-      if (txtFile.readyState === 4 && txtFile.status == 200) {
-          var data = JSON.parse(txtFile.responseText);
-          var dates = Object.keys(data);
+      var fileName = "data.json";
+      var temperatures = [];
+      var txtFile = new XMLHttpRequest();
+      txtFile.onreadystatechange = function() {
+          if (txtFile.readyState === 4 && txtFile.status == 200) {
+              var data = JSON.parse(txtFile.responseText);
+              var dates = Object.keys(data);
 
-          var counter = 1;
-          for (const element in data){
-            temperature = data[element]["   TN"];
-            temperatures.push(temperature);
-            counter++;
-          }
-          console.log(temperatures);
-          ctx.beginPath();
-          ctx.moveTo(xtransform(days[0]), ytransform(115 - temperature[0]));
+              // gets temperature out of dicitonary
+              var counter = 1;
+              for (const element in data){
+                temperature = data[element]["   TN"];
+                temperatures.push(temperature);
+                counter++;
+              }
 
-          for (var i = 1; i < 365; i++){
-            ctx.lineTo(xtransform(days[i]), ytransform(115 - temperatures[i]));
-            ctx.stroke();
+              // initialize cursour to begin drwaing graph
+              ctx.beginPath();
+              ctx.moveTo(xtransform(days[0]), ytransform(100 - temperature[0]));
+
+              // draw graph
+              for (var i = 1; i < 365; i++){
+                ctx.lineTo(xtransform(days[i]), ytransform(100 - temperatures[i]));
+                ctx.stroke();
+              }
+              // create ticks on x axis
+              months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
+              ctx.beginPath();
+              var j = 0
+              for (var i = 100; i < 870; i += 800 / 12){
+                ctx.moveTo(i,515);
+                ctx.lineTo(i,525);
+                ctx.fillText(months[j], i - 10, 545);
+                j += 1;
+                ctx.stroke();
+              }
+
+              // create ticks on y axis
+              for (var i = -100; i <= 200 ; i += 10){
+                ctx.beginPath();
+                ctx.moveTo(90, ytransform(i));
+                ctx.font = "15px Arial";
+                ctx.textBaseline = "middle"
+                ctx.fillText(i/10, 50, ytransform(100 - i));
+                ctx.lineTo(900, ytransform(i));
+                ctx.stroke();
+              }
           }
       }
-  }
 
 
-txtFile.open("GET", fileName);
-txtFile.send();
-</script>
-
-</body>
+    txtFile.open("GET", fileName);
+    txtFile.send();
+    </script>
+  </body>
 </html>
