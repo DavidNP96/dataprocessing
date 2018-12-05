@@ -3,10 +3,10 @@ var width = 700
 var barPadding = 5;
 
 d3.select("body")
-.append("h")
-.style("font-size", "20px")
-.style("text-decoration", "underline")
-.text("Amount renewable energy per Kilotonne of Oil Equivalent (KOTE) per country");
+  .append("h")
+  .style("font-size", "20px")
+  .style("text-decoration", "underline")
+  .text("Amount renewable energy per Kilotonne of Oil Equivalent (KOTE) per country");
 d3.select("body").append("p").text("name: David Pantphlet");
 d3.select("body").append("p").text("student number: 12466638");
 
@@ -21,7 +21,7 @@ var values = []
 d3.json("data.json").then(function(data){
   var countries = Object.keys(data)
 
-  for(var i = 0; i < countries.length; i++){
+  for (var i = 0; i < countries.length; i++){
     values.push(data[countries[i]]["Value"])
   }
 
