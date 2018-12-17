@@ -21,6 +21,7 @@ dimGraph = {
 
 total = [];
 
+// read in data
 d3.json("data.json").then(function(data){
   var countries = Object.keys(data)
 
@@ -238,7 +239,7 @@ function createPie(data){
                     .attr("transform", "translate(500, 300)")
                     .selectAll(".legend")
                     .data(angles);
-                    
+
     // create eacht bar of legend
     var legend = legends.enter()
                         .append("g")
